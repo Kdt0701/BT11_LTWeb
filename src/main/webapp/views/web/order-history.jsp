@@ -6,6 +6,8 @@
 <div class="container py-4">
 <h2 class="fw-bold mb-3">Lịch sử đặt hàng</h2>
 <c:if test="${param.success == '1'}"><div class="alert alert-success">Đặt hàng COD thành công.</div></c:if>
+<c:if test="${param.cancelled == '1'}"><div class="alert alert-success">Đã hủy đơn hàng. Đơn được chuyển thẳng sang trạng thái Đơn hàng hủy.</div></c:if>
+<c:if test="${param.error == 'locked'}"><div class="alert alert-warning">Đơn hàng đã được Admin xác nhận nên không thể chỉnh sửa hoặc hủy.</div></c:if>
 <div class="mb-4 d-flex flex-wrap gap-2">
 <c:url var="allUrl" value="/orders"/><a href="${allUrl}" class="btn ${empty selectedStatus ? 'btn-dark' : 'btn-outline-dark'}">Tất cả</a>
 <c:forEach var="st" items="${['Đơn hàng mới','Đã xác nhận','Chuẩn bị hàng','Vận chuyển','Giao hàng','Đã giao','Đơn hàng hủy','Đơn hàng hoàn']}">
@@ -24,6 +26,9 @@
 <div class="d-flex justify-content-between border-bottom py-2"><span>${d.video.title} × ${d.quantity}</span><span><fmt:formatNumber value="${d.subTotal}" type="number"/> đ</span></div>
 </c:forEach>
 <div class="text-end mt-3"><strong>Tổng: <span class="text-danger"><fmt:formatNumber value="${o.totalAmount}" type="number"/> đ</span></strong></div>
+<div class="mt-3 d-flex justify-content-end gap-2">
+<c:if test="${o.status == 'Đơn hàng mới'}"><a href="<c:url value='/orders/edit'><c:param name='id' value='${o.orderId}'/></c:url>" class="btn btn-primary btn-sm">Chỉnh sửa / Hủy đơn</a></c:if>
+</div>
 <div class="small text-muted mt-2">COD · ${o.receiverName} · ${o.receiverPhone} · ${o.shippingAddress}</div>
 </div></div>
 </c:forEach>
