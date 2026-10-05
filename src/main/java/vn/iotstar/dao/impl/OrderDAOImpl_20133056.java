@@ -65,7 +65,16 @@ public class OrderDAOImpl_20133056 implements OrderDAO_20133056 {
             tx.begin();
             Order order = em.find(Order.class, orderId);
             if (order == null) throw new IllegalArgumentException("Không tìm thấy đơn hàng #" + orderId);
+            if ("Đơn hàng hoàn".equals(status) && !"APPROVED".equals(order.getReturnStatus())) {
+                throw new IllegalStateException("Chỉ được chuyển sang Đơn hàng hoàn sau khi Admin chấp nhận yêu cầu hoàn trả.");
+            }
+            if ("PENDING".equals(order.getReturnStatus()) && !"Đã giao".equals(status)) {
+                throw new IllegalStateException("Yêu cầu hoàn trả đang chờ xử lý. Hãy chấp nhận hoặc từ chối yêu cầu trước.");
+            }
             order.setStatus(status);
+            if ("Đã giao".equals(status) && order.getDeliveredAt() == null) {
+                order.setDeliveredAt(java.time.LocalDateTime.now());
+            }
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); throw e; }
         finally { em.close(); }
@@ -144,6 +153,53 @@ public class OrderDAOImpl_20133056 implements OrderDAO_20133056 {
             Order order = findPendingOrder(em, orderId, username);
             for (OrderDetail d : order.getDetails()) d.getVideo().setStock(d.getVideo().getStock() + d.getQuantity());
             order.setStatus("Đơn hàng hủy");
+            tx.commit();
+        } catch (Exception e) { if (tx.isActive()) tx.rollback(); throw e; }
+        finally { em.close(); }
+    }
+
+    @Override
+    public void requestReturn(Long orderId, String username, String reason) {
+        EntityManager em = JPAConfig.getEnityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            if (reason == null || reason.isBlank()) throw new IllegalArgumentException("Vui lòng nhập lý do hoàn trả.");
+            reason = reason.trim();
+            if (reason.length() > 1000) throw new IllegalArgumentException("Lý do hoàn trả tối đa 1000 ký tự.");
+            tx.begin();
+            TypedQuery<Order> q = em.createQuery("SELECT o FROM Order o WHERE o.orderId = :id AND o.user.username = :username", Order.class);
+            q.setParameter("id", orderId); q.setParameter("username", username);
+            List<Order> list = q.getResultList();
+            if (list.isEmpty()) throw new IllegalArgumentException("Không tìm thấy đơn hàng hoặc bạn không có quyền thao tác.");
+            Order order = list.get(0);
+            if (!"Đã giao".equals(order.getStatus())) throw new IllegalStateException("Chỉ được yêu cầu hoàn trả khi đơn hàng đã giao.");
+            if (order.getDeliveredAt() == null) throw new IllegalStateException("Đơn hàng chưa có thời điểm giao hàng để kiểm tra thời hạn hoàn trả.");
+            if (order.getDeliveredAt().plusDays(7).isBefore(java.time.LocalDateTime.now())) throw new IllegalStateException("Đã quá thời hạn hoàn trả 7 ngày kể từ khi giao hàng.");
+            if ("PENDING".equals(order.getReturnStatus())) throw new IllegalStateException("Yêu cầu hoàn trả đang chờ Admin xem xét.");
+            if ("APPROVED".equals(order.getReturnStatus())) throw new IllegalStateException("Đơn hàng đã được chấp nhận hoàn trả.");
+            order.setReturnReason(reason);
+            order.setReturnRequestedAt(java.time.LocalDateTime.now());
+            order.setReturnStatus("PENDING");
+            tx.commit();
+        } catch (Exception e) { if (tx.isActive()) tx.rollback(); throw e; }
+        finally { em.close(); }
+    }
+
+    @Override
+    public void reviewReturn(Long orderId, boolean approve) {
+        EntityManager em = JPAConfig.getEnityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Order order = em.find(Order.class, orderId);
+            if (order == null) throw new IllegalArgumentException("Không tìm thấy đơn hàng #" + orderId);
+            if (!"PENDING".equals(order.getReturnStatus())) throw new IllegalStateException("Đơn hàng không có yêu cầu hoàn trả đang chờ xử lý.");
+            if (approve) {
+                order.setReturnStatus("APPROVED");
+                order.setStatus("Đơn hàng hoàn");
+            } else {
+                order.setReturnStatus("REJECTED");
+            }
             tx.commit();
         } catch (Exception e) { if (tx.isActive()) tx.rollback(); throw e; }
         finally { em.close(); }

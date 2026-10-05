@@ -12,6 +12,7 @@
         </c:when>
         <c:otherwise>
             <c:if test="${param.updated == '1'}"><div class="alert alert-success">Đã cập nhật trạng thái đơn hàng.</div></c:if>
+            <c:if test="${param.returnReviewed == '1'}"><div class="alert alert-success">Đã xử lý yêu cầu hoàn trả.</div></c:if>
             <div class="row g-4">
                 <div class="col-lg-8">
                     <div class="card shadow-sm">
@@ -52,6 +53,28 @@
                             <p class="mb-0"><strong>Ngày đặt:</strong> ${order.orderDate}</p>
                         </div>
                     </div>
+
+                    <c:if test="${order.returnStatus == 'PENDING'}">
+                    <div class="card shadow-sm mb-3 border-warning">
+                        <div class="card-header fw-bold bg-warning-subtle">Yêu cầu hoàn trả đang chờ xử lý</div>
+                        <div class="card-body">
+                            <p><strong>Thời gian yêu cầu:</strong> ${order.returnRequestedAt}</p>
+                            <div class="alert alert-light border"><strong>Lý do User:</strong><br>${order.returnReason}</div>
+                            <div class="d-flex gap-2">
+                                <form method="post" action="<c:url value='/admin/orders/return'/>">
+                                    <input type="hidden" name="id" value="${order.orderId}"><input type="hidden" name="decision" value="approve">
+                                    <button type="submit" class="btn btn-success">Chấp nhận hoàn</button>
+                                </form>
+                                <form method="post" action="<c:url value='/admin/orders/return'/>">
+                                    <input type="hidden" name="id" value="${order.orderId}"><input type="hidden" name="decision" value="reject">
+                                    <button type="submit" class="btn btn-outline-danger">Từ chối hoàn</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${order.returnStatus == 'REJECTED'}"><div class="alert alert-secondary"><strong>Hoàn trả:</strong> Admin đã từ chối yêu cầu. Lý do User: ${order.returnReason}</div></c:if>
+                    <c:if test="${order.returnStatus == 'APPROVED'}"><div class="alert alert-success"><strong>Hoàn trả:</strong> Đã được Admin chấp nhận.</div></c:if>
 
                     <div class="card shadow-sm">
                         <div class="card-header fw-bold">Duyệt / cập nhật trạng thái</div>

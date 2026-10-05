@@ -17,4 +17,6 @@ public class OrderServiceImpl_20133056 implements OrderService_20133056 {
     public void updateDetail(Long orderId, String username, Long detailId, int quantity) { dao.updateDetail(orderId, username, detailId, quantity); }
     public void deleteDetail(Long orderId, String username, Long detailId) { dao.deleteDetail(orderId, username, detailId); }
     public void cancelOrder(Long orderId, String username) { dao.cancelOrder(orderId, username); }
+    public void requestReturn(Long orderId, String username, String reason) { dao.requestReturn(orderId, username, reason); }
+    public void reviewReturn(Long orderId, boolean approve) { dao.reviewReturn(orderId, approve); }
 }

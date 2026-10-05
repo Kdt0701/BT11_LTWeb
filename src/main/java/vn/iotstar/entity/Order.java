@@ -43,6 +43,18 @@ public class Order implements Serializable {
     @Column(nullable = false)
     private LocalDateTime orderDate = LocalDateTime.now();
 
+    @Column
+    private LocalDateTime deliveredAt;
+
+    @Column(length = 1000)
+    private String returnReason;
+
+    @Column(length = 20)
+    private String returnStatus = "NONE";
+
+    @Column
+    private LocalDateTime returnRequestedAt;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderDetail> details = new ArrayList<>();

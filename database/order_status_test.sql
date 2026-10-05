@@ -34,3 +34,18 @@ SELECT orderId, username, status, paymentMethod, totalAmount, orderDate
 FROM orders
 ORDER BY orderDate DESC;
 GO
+
+
+-- =========================================================
+-- TEST HOÀN TRẢ ĐƠN HÀNG
+-- =========================================================
+-- Khi test trạng thái bằng SQL, nhớ đặt deliveredAt để hệ thống có mốc 7 ngày.
+-- Ví dụ đơn #1 vừa được giao hôm nay:
+UPDATE orders
+SET status = N'Đã giao', deliveredAt = SYSDATETIME(), returnStatus = N'NONE'
+WHERE orderId = 1;
+GO
+
+-- Test đơn đã quá 7 ngày: User sẽ không được gửi yêu cầu hoàn.
+-- UPDATE orders SET status = N'Đã giao', deliveredAt = DATEADD(DAY, -8, SYSDATETIME()), returnStatus = N'NONE' WHERE orderId = 1;
+-- GO

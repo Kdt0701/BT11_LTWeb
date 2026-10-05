@@ -8,7 +8,7 @@ import vn.iotstar.entity.User;
 import vn.iotstar.service.OrderService_20133056;
 import vn.iotstar.service.impl.OrderServiceImpl_20133056;
 
-@WebServlet({"/admin/orders", "/admin/orders/detail", "/admin/orders/status"})
+@WebServlet({"/admin/orders", "/admin/orders/detail", "/admin/orders/status", "/admin/orders/return"})
 public class OrderAdminController_20133056 extends HttpServlet {
     private static final String[] STATUSES = {
         "Đơn hàng mới", "Đã xác nhận", "Chuẩn bị hàng", "Vận chuyển",
@@ -60,6 +60,12 @@ public class OrderAdminController_20133056 extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         try {
             Long id = Long.valueOf(req.getParameter("id"));
+            if ("/admin/orders/return".equals(req.getServletPath())) {
+                boolean approve = "approve".equals(req.getParameter("decision"));
+                service.reviewReturn(id, approve);
+                resp.sendRedirect(req.getContextPath() + "/admin/orders/detail?id=" + id + "&returnReviewed=1");
+                return;
+            }
             String status = req.getParameter("status");
             if (validStatus(status)) service.updateStatus(id, status);
             resp.sendRedirect(req.getContextPath() + "/admin/orders/detail?id=" + id + "&updated=1");

@@ -147,6 +147,10 @@ CREATE TABLE orders (
     receiverName NVARCHAR(100) NOT NULL,
     receiverPhone NVARCHAR(20) NOT NULL,
     orderDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+    deliveredAt DATETIME2 NULL,
+    returnReason NVARCHAR(1000) NULL,
+    returnStatus NVARCHAR(20) NOT NULL DEFAULT N'NONE',
+    returnRequestedAt DATETIME2 NULL,
     FOREIGN KEY (username) REFERENCES users(username)
 );
 GO

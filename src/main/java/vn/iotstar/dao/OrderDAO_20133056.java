@@ -13,4 +13,6 @@ public interface OrderDAO_20133056 {
     void updateDetail(Long orderId, String username, Long detailId, int quantity);
     void deleteDetail(Long orderId, String username, Long detailId);
     void cancelOrder(Long orderId, String username);
+    void requestReturn(Long orderId, String username, String reason);
+    void reviewReturn(Long orderId, boolean approve);
 }

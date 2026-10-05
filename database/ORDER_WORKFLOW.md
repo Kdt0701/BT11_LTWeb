@@ -40,3 +40,14 @@ Có file `database/order_status_test.sql` để đổi trạng thái thủ công
 - User có thể hủy trực tiếp; hệ thống tự chuyển trạng thái thành `Đơn hàng hủy`, không cần Admin duyệt.
 - Khi Admin đã chuyển sang bất kỳ trạng thái nào khác `Đơn hàng mới`, User không thể chỉnh sửa hoặc hủy đơn nữa.
 - Khi xóa sản phẩm hoặc hủy đơn, số lượng đã giữ cho đơn được hoàn lại tồn kho.
+
+
+## Hoàn trả đơn hàng
+
+- User chỉ được yêu cầu hoàn trả khi đơn ở trạng thái `Đã giao`.
+- Thời hạn: tối đa 7 ngày kể từ `deliveredAt`.
+- User phải nhập lý do hoàn trả.
+- Yêu cầu được lưu với `returnStatus = PENDING`; trạng thái giao hàng vẫn là `Đã giao` trong lúc chờ Admin.
+- Admin xem lý do tại chi tiết đơn và chọn **Chấp nhận hoàn** hoặc **Từ chối hoàn**.
+- Chấp nhận: `returnStatus = APPROVED`, `status = Đơn hàng hoàn`.
+- Từ chối: `returnStatus = REJECTED`, đơn vẫn ở `Đã giao`.
