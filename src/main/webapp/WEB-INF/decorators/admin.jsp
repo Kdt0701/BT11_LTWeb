@@ -30,6 +30,7 @@
             <a href="<c:url value='/admin/profile'/>"><i class="fa-solid fa-user me-2"></i>Hồ sơ cá nhân</a>
             <a href="<c:url value='/admin/category/list'/>"><i class="fa-solid fa-list me-2"></i>Quản lý Danh mục</a>
             <a href="<c:url value='/admin/video/list'/>"><i class="fa-solid fa-video me-2"></i>Quản lý Video</a>
+            <a href="<c:url value='/admin/orders'/>"><i class="fa-solid fa-receipt me-2"></i>Quản lý đơn hàng</a>
             <a href="<c:url value='/logout'/>" class="text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</a>
         </div>
 
