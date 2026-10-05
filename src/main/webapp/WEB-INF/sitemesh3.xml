@@ -1,0 +1,13 @@
+<sitemesh>
+    <mapping path="/upload/*" exclude="true"/>
+    <mapping path="/static/*" exclude="true"/>
+    
+    <mapping path="/WEB-INF/decorators/*" exclude="true"/>
+    
+    <mapping path="/login" exclude="true"/>
+    <mapping path="/register" exclude="true"/>
+
+    <mapping path="/admin/*" name = "admin" decorator="admin.jsp"/>
+    
+    <mapping path="/*" name = "web" decorator="web.jsp"/>
+</sitemesh>
