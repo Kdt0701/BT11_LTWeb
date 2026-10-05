@@ -106,6 +106,22 @@
                                 <span>${v.category.categoryName}</span>
                                 <span><i class="fa-solid fa-eye"></i> ${v.views}</span>
                             </div>
+                            <div class="mt-2">
+                                <c:choose>
+                                    <c:when test="${v.active && v.stock > 0}">
+                                        <form action="<c:url value='/cart/add'/>" method="post">
+                                            <input type="hidden" name="id" value="${v.videoId}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-sm btn-danger w-100">
+                                                <i class="fa-solid fa-cart-plus me-1"></i> Thêm vào giỏ
+                                            </button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="button" class="btn btn-sm btn-secondary w-100" disabled>Hết hàng</button>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                         </a>
                     </div>
                 </div>

@@ -76,6 +76,26 @@
                                 ${video.description}
                             </p>
                         </div>
+
+                        <hr>
+                        <div class="d-flex align-items-center gap-3">
+                            <c:choose>
+                                <c:when test="${video.active && video.stock > 0}">
+                                    <form action="<c:url value='/cart/add'/>" method="post" class="d-flex align-items-center gap-2">
+                                        <input type="hidden" name="id" value="${video.videoId}">
+                                        <label for="detailQuantity" class="fw-bold mb-0">Số lượng:</label>
+                                        <input id="detailQuantity" type="number" name="quantity" value="1" min="1" max="${video.stock}" class="form-control" style="width:90px;">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fa-solid fa-cart-plus me-1"></i> Thêm vào giỏ
+                                        </button>
+                                    </form>
+                                    <span class="text-muted small">Tối đa ${video.stock} sản phẩm</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <button type="button" class="btn btn-secondary" disabled>Hết hàng</button>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
                     </div>
                 </div>
             </div>
