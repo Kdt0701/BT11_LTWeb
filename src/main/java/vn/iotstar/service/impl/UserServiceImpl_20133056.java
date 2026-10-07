@@ -61,8 +61,8 @@ public class UserServiceImpl_20133056 implements UserService_20133056 {
 	}
 
 	@Override
-	public void updatePassword(int id, String newpass) {
-		userDAO.updatePassword(id, newpass);
+	public void updatePassword(String username, String newpass) {
+		userDAO.updatePassword(username, newpass);
 		
 	}
 

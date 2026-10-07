@@ -66,31 +66,40 @@ public class UserDAOImpl_20133056 implements UserDAO_20133056{
 	@Override
 	public User findByEmail(String email) {
 		EntityManager em = JPAConfig.getEnityManager();
-		return em.find(User.class, email);
+		try {
+			TypedQuery<User> q = em.createQuery(
+					"SELECT u FROM User u WHERE u.email = :email", User.class);
+			q.setParameter("email", email);
+			return q.getResultStream().findFirst().orElse(null);
+		} finally {
+			em.close();
+		}
 	}
 
 	@Override
-	public void updatePassword(int id, String newpass) {
+	public void updatePassword(String username, String newpass) {
 		EntityManager em = JPAConfig.getEnityManager();
-	    EntityTransaction tx = em.getTransaction();
-	    try {
-	        tx.begin();
+		EntityTransaction tx = em.getTransaction();
+		try {
+			tx.begin();
 
-	        em.createQuery(
-	            "UPDATE User u SET u.password = :pwd WHERE u.id = :id"
-	        )
-	        .setParameter("pwd", newpass)
-	        .setParameter("id", id)
-	        .executeUpdate();
+			int updated = em.createQuery(
+					"UPDATE User u SET u.password = :pwd WHERE u.username = :username")
+					.setParameter("pwd", newpass)
+					.setParameter("username", username)
+					.executeUpdate();
 
-	        tx.commit();
-	    } catch (Exception e) {
-	        if (tx.isActive()) tx.rollback();
-	        throw e;
-	    } finally {
-	        em.close();
-	    }
-		
+			if (updated != 1) {
+				throw new IllegalArgumentException("Không tìm thấy tài khoản để cập nhật mật khẩu.");
+			}
+
+			tx.commit();
+		} catch (Exception e) {
+			if (tx.isActive()) tx.rollback();
+			throw e;
+		} finally {
+			em.close();
+		}
 	}
 
 	@Override

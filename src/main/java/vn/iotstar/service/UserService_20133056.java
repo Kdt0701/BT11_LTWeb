@@ -15,7 +15,7 @@ public interface UserService_20133056 {
 	
 	User findByEmail(String email);
 	
-	void updatePassword(int id, String newpass);
+	void updatePassword(String username, String newpass);
 	
 	void update(User user);
 }

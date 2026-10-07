@@ -10,7 +10,7 @@ public interface UserDAO_20133056 {
 	boolean checkExistUsername(String username);
 	User findByEmail(String email);
 	
-	void updatePassword(int id, String newpass);
+	void updatePassword(String username, String newpass);
 	
 	void update(User user);
 }

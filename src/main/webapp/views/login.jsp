@@ -76,6 +76,10 @@
     <h2 class="text-center">ĐĂNG NHẬP</h2>
 
     <!-- Thông báo lỗi -->
+    <c:if test="${param.reset == 'success'}">
+        <div class="alert alert-success text-center">Đổi mật khẩu thành công. Vui lòng đăng nhập lại.</div>
+    </c:if>
+
     <c:if test="${alert != null}">
         <div class="alert alert-danger text-center">${alert}</div>
     </c:if>

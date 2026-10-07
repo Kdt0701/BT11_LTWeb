@@ -6,6 +6,7 @@
     
     <mapping path="/login" exclude="true"/>
     <mapping path="/register" exclude="true"/>
+    <mapping path="/forgot-password" exclude="true"/>
 
     <mapping path="/admin/*" name = "admin" decorator="admin.jsp"/>
     
