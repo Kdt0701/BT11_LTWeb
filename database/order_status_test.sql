@@ -21,7 +21,7 @@ UPDATE orders SET status = N'Vận chuyển' WHERE orderId = 1;
 UPDATE orders SET status = N'Giao hàng' WHERE orderId = 1;
 
 -- 6. Đã giao
-UPDATE orders SET status = N'Đã giao' WHERE orderId = 1;
+UPDATE orders SET status = N'Đã giao', deliveredAt = SYSDATETIME(), returnStatus = N'NONE' WHERE orderId = 1;
 
 -- 7. Đơn hàng hủy
 UPDATE orders SET status = N'Đơn hàng hủy' WHERE orderId = 1;

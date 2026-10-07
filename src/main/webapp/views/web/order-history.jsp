@@ -41,7 +41,7 @@
     </c:choose>
 </c:if>
 </div>
-<c:if test="${o.status == 'Đã giao' && o.returnStatus == 'NONE'}">
+<c:if test="${o.status == 'Đã giao' && (empty o.returnStatus || o.returnStatus == 'NONE')}">
 <div class="small text-muted mt-2">Thời hạn hoàn trả: tối đa 7 ngày kể từ ngày giao hàng.</div>
 <div class="modal fade" id="returnModal${o.orderId}" tabindex="-1">
   <div class="modal-dialog"><div class="modal-content">

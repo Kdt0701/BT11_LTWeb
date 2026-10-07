@@ -37,7 +37,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>Mã đơn</th><th>Khách hàng</th><th>Ngày đặt</th>
-                                <th>Thanh toán</th><th>Tổng tiền</th><th>Trạng thái</th><th></th>
+                                <th>Thanh toán</th><th>Tổng tiền</th><th>Trạng thái đơn</th><th>Hoàn trả</th><th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,6 +49,23 @@
                                 <td>${o.paymentMethod}</td>
                                 <td class="text-danger fw-bold"><fmt:formatNumber value="${o.totalAmount}" type="number"/> đ</td>
                                 <td><span class="badge bg-primary">${o.status}</span></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${o.returnStatus == 'PENDING'}">
+                                            <span class="badge bg-warning text-dark">Chờ duyệt hoàn</span>
+                                            <c:if test="${not empty o.returnRequestedAt}"><br><small class="text-muted">${o.returnRequestedAt}</small></c:if>
+                                        </c:when>
+                                        <c:when test="${o.returnStatus == 'APPROVED'}">
+                                            <span class="badge bg-success">Đã chấp nhận hoàn</span>
+                                        </c:when>
+                                        <c:when test="${o.returnStatus == 'REJECTED'}">
+                                            <span class="badge bg-secondary">Đã từ chối hoàn</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="text-muted">Không có yêu cầu</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td><a class="btn btn-sm btn-outline-primary" href="<c:url value='/admin/orders/detail?id=${o.orderId}'/>">Xem / duyệt</a></td>
                             </tr>
                         </c:forEach>
